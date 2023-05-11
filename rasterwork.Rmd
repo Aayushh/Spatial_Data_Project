@@ -1,0 +1,117 @@
+---
+title: "Untitled"
+author: "Aayush"
+date: "2023-04-18"
+output: html_document
+---
+https://r-spatial.org/
+https://edzer.github.io/UseR2021/#1
+https://r-spatial.github.io/stars/
+https://www.youtube.com/watch?v=GjTmvivY1yw
+Books
+https://r-spatial.org/book/07-Introsf.html
+https://opengeohub.github.io/spatial-prediction-eml/introduction-to-spatial-and-spatiotemporal-data.html
+
+Important Packages
+
+```{r setup, include=FALSE}
+install.packages("ncdf4")
+install.packages("dplyr")
+install.packages("sf")
+install.packages("stars")
+install.packages("sp")
+install.packages("maps")
+```
+
+Load packages
+
+```{r cars}
+library(ncdf4)
+library(dplyr)
+library(sf)
+library(stars)
+library(sp)
+library(maps)
+```
+
+```{r setup, include=FALSE}
+maps::map("world")
+maps::map("china")
+plot(map)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+(file <- system.file("gpkg/nc.gpkg", package = "sf"))
+nc <- st_read(file)
+
+```
+
+##Converting ASCII to Raster
+Install the following packages
+```{r}
+install.packages("raster")
+
+```
+Load themn
+```{r}
+library(raster)
+```
+
+
+
+```{r convert, echo=FALSE}
+header <-scan("precip.2017", nlines=6, what=character())
+read.table("precip.2017", header=F, skip=6)-> mat
+as.matrix(mat)->mat
+dim(mat)
+raster(mat)->r
+r
+
+#Make a data frame
+num1 <- seq(1,length(header),2)
+num2 <- seq(2,length(header),2)
+header.df<- data.frame(labels=header[num1], values=as.numeric(header[num2]))
+```
+Plotting the Raster layer
+```{r}
+xmin <- header.df[3,2]
+ymin <- header.df[4,2]
+xmax <- header.df[5,2] * header.df[1,2]+xmin 
+ymax<- header.df[5,2] * header.df[2,2]+ymin
+extent(r) <- extent(xmin, xmax, ymin,ymax)
+plot(r)
+crs(r) <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 + towgs84=0,0,0" 
+```
+Converting
+```{r}
+r  #check the raster again
+#save it as tif file format
+ writeRaster(r, "precip.tif", options=c("TWS=YES"))
+#this is how to save in ascii format
+ raster("precip.tif") -> r2
+ plot(r2)
+ writeRaster(r2, "precip.asc", format="ascii")
+```
+```{r}
+read.table("precip.2017", header=F, skip=6)-> mat
+as.matrix(mat)->mat
+raster(mat)->r2
+plot(r2)
+writeRaster(r2, "precip2.tif", options=c("TWS=YES"))
+```
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Direct COnvert
+```{r}
+read.asciigrid("precip.2017") -> grid1
+plot(grid1)
+raster(grid1) -> r2 
+```
+
