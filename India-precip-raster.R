@@ -1,4 +1,5 @@
-setwd("/Users/aayus/OneDrive/Desktop/data_spatial_yashika")
+#Take data from https://downloads.psl.noaa.gov/Datasets/cpc_global_precip/
+
 install.packages("ncdf4")
 library(ncdf4)
 install.packages("dplyr")
