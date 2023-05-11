@@ -5,7 +5,7 @@ Spatial Data Book
 https://r-spatial.org/book/
 
 Contains
-Understanding Spatial Data and how it differs from normal data
+Understanding Spatial Data and how it differs from normal data.
 Manipulating data to reshape, subset, extract, crop.
-Plotting spatial data
+Plotting spatial data.
 Anlysing spatial data.
